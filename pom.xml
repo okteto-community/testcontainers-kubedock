@@ -110,6 +110,9 @@
         <version>2.2.0</version>
         <configuration>
           <argLine>-Dapi.version=${docker.api.version}</argLine>
+          <!-- JUnit XML reports in target/test-reports, which okteto test downloads as artifacts. -->
+          <reportsDirectory>${project.build.directory}/test-reports</reportsDirectory>
+          <junitxml>.</junitxml>
         </configuration>
         <executions>
           <execution>

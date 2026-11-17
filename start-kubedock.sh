@@ -4,15 +4,20 @@
 # your own Kubernetes credentials. It only listens on 127.0.0.1, so nobody else can use it.
 set -eu
 
-if ! command -v kubedock > /dev/null; then
+version=0.23.0
+# Cache this directory between runs to skip the download (see okteto.yml).
+bin="$HOME/.kubedock/$version/kubedock"
+
+if [ ! -x "$bin" ]; then
   arch=$(uname -m | sed 's/aarch64/arm64/')
-  curl -sfL "https://github.com/joyrex2001/kubedock/releases/download/0.23.0/kubedock_linux_${arch}.tar.gz" \
-    | tar -xz -C /usr/local/bin kubedock
+  mkdir -p "$(dirname "$bin")"
+  curl -sfL "https://github.com/joyrex2001/kubedock/releases/download/$version/kubedock_linux_${arch}.tar.gz" \
+    | tar -xz -C "$(dirname "$bin")" kubedock
 fi
 
 # --lock: runs in the same namespace wait for each other instead of colliding on network aliases.
 # --prune-start: once it holds the lock, kubedock deletes what a cancelled run left behind.
-kubedock server \
+"$bin" server \
   --kubeconfig "${KUBECONFIG:-$HOME/.kube/config}" \
   --namespace "$OKTETO_NAMESPACE" \
   --listen-addr 127.0.0.1:2475 \

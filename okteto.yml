@@ -1,0 +1,26 @@
+name: testcontainers-kubedock
+
+# The tests use Testcontainers. start-kubedock.sh starts kubedock in the background, and the
+# commands after it point Testcontainers to it, so the containers run as pods in your namespace.
+# Okteto already gives test and deploy commands your Kubernetes credentials.
+
+build:
+  app:
+    context: .
+
+deploy:
+  image: maven:3.9-eclipse-temurin-21
+  commands:
+    - name: Start kubedock
+      command: ./start-kubedock.sh
+    - name: Run the tests
+      command: DOCKER_HOST=tcp://127.0.0.1:2475 TESTCONTAINERS_RYUK_DISABLED=true mvn -B test
+
+test:
+  unit:
+    image: maven:3.9-eclipse-temurin-21
+    caches:
+      - /root/.m2
+    commands:
+      - ./start-kubedock.sh
+      - DOCKER_HOST=tcp://127.0.0.1:2475 TESTCONTAINERS_RYUK_DISABLED=true mvn -B test

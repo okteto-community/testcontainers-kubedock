@@ -1,0 +1,16 @@
+name: testcontainers-kubedock-tests-in-build
+
+# Runs the tests during `okteto build`. The build doesn't get your Kubernetes credentials, so pass
+# them as a build secret. Create it before building:
+#   export KUBEDOCK_KUBECONFIG="$(./kubeconfig.sh)"
+#   okteto build -f okteto-tests-in-build.yml
+
+build:
+  app:
+    context: .
+    dockerfile: Dockerfile.tests-in-build
+    args:
+      OKTETO_NAMESPACE: ${OKTETO_NAMESPACE}
+    secrets:
+      kubeconfig:
+        env: KUBEDOCK_KUBECONFIG

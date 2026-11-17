@@ -1,5 +1,3 @@
-name: testcontainers-kubedock
-
 build:
   app:
     context: .

@@ -1,9 +1,6 @@
 build:
   app:
     context: .
-    args:
-      # Okteto builds don't have a Docker API for Testcontainers. The tests run in okteto test.
-      SKIP_TESTS: "true"
 
 deploy:
   - envsubst < k8s.yml | kubectl apply -f -

@@ -15,7 +15,7 @@ okteto test unit   # runs the tests, with Postgres as a pod in your namespace
 
 | Command | What it does |
 |---|---|
-| `okteto build` | Builds the image with `SKIP_TESTS=true`. Okteto builds don't have a Docker API for Testcontainers. |
+| `okteto build` | Builds the image without the tests. |
 | `okteto deploy` | Builds the image and deploys the app (`k8s.yml`), with a public endpoint. |
 | `okteto test unit` | Starts kubedock, runs `mvn test` against it and downloads the test reports to `target/test-reports`. |
 
@@ -33,20 +33,6 @@ container, and deletes it when the test stops the container.
 
 kubedock only listens on `127.0.0.1` and only lives while `okteto test` runs, so nobody else can use
 it to create pods, and the pods are created with your own permissions.
-
-## Running the tests in the build anyway
-
-The `Dockerfile` runs the tests by default. `okteto.yml` turns them off with a build argument:
-
-```yaml
-build:
-  app:
-    args:
-      SKIP_TESTS: "true"
-```
-
-So a CI that builds the image with a Docker daemon available keeps running the tests in the build,
-and Okteto runs them in `okteto test`.
 
 ## Faster runs
 

@@ -12,9 +12,8 @@ test:
       - /root/.m2
       - /root/.kubedock
     commands:
-      # Starts kubedock in the background with the Kubernetes credentials Okteto gives this
-      # container. Testcontainers then runs its containers as pods in your namespace.
-      - ./start-kubedock.sh
-      - DOCKER_HOST=tcp://127.0.0.1:2475 TESTCONTAINERS_RYUK_DISABLED=true mvn -B test
+      # Runs the tests with kubedock as their Docker API, with the Kubernetes credentials Okteto
+      # gives this container. Testcontainers then runs its containers as pods in your namespace.
+      - ./with-kubedock.sh mvn -B test
     artifacts:
       - target/test-reports

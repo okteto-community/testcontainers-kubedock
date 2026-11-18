@@ -1,9 +1,5 @@
-# Builds the app and, by default, runs its tests, which use Testcontainers and need a Docker API.
-# Okteto builds don't have one, so okteto.yml sets SKIP_TESTS=true and runs the tests in
-# `okteto test` instead.
+# Builds the app without its tests. The tests use Testcontainers and run in `okteto test`.
 FROM maven:3.9-eclipse-temurin-21 AS build
-
-ARG SKIP_TESTS=false
 
 WORKDIR /src
 
@@ -12,7 +8,7 @@ COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2 mvn -B dependency:go-offline
 
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 mvn -B package -DskipTests=${SKIP_TESTS}
+RUN --mount=type=cache,target=/root/.m2 mvn -B package -DskipTests
 
 FROM eclipse-temurin:21-jre
 
